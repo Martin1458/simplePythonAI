@@ -12,6 +12,15 @@ app.add_middleware(
 )
  
 @app.get("/")
-async def root(numbers: list[int] = Query([])):
-    total = sum(numbers)
-    return {"message": f"The sum of {numbers} is {total}"}
+#async def root(numbers: list[int] = Query([])):
+#    total = sum(numbers)
+#    return {"message": f"The sum of {numbers} is {total}"}
+async def root(myVar: str):
+    try:
+        myNewVar = myVar.split(" ")
+        myNewVar = [ int(i) for i in myNewVar]
+        myNewVar = sum(myNewVar)
+        myVar = myNewVar
+    except:
+        pass
+    return myVar
