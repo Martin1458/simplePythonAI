@@ -12,5 +12,6 @@ app.add_middleware(
 )
  
 @app.get("/")
-async def root():
-    return {"message": "Hello, world!"}
+async def root(numbers: list[int] = Query([])):
+    total = sum(numbers)
+    return {"message": f"The sum of {numbers} is {total}"}
