@@ -1,3 +1,5 @@
+# Run using: uvicorn main:app --reload 
+# Make sure you are in the same directory as this file or youll get the Error loading ASGI app.
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,6 +18,8 @@ app.add_middleware(
 #    total = sum(numbers)
 #    return {"message": f"The sum of {numbers} is {total}"}
 async def root(myVar: str):
+    if myVar == "":
+        return ""
     try:
         myNewVar = myVar.split(" ")
         myNewVar = [ int(i) for i in myNewVar]
