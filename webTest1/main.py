@@ -14,10 +14,10 @@ app.add_middleware(
 )
  
 # setup models
-import os
-model_folder = os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels")
-for model_name in os.listdir(model_folder):
-     if model_name.endswith(".pkl"):
+#import os
+#model_folder = os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels")
+#for model_name in os.listdir(model_folder):
+#     if model_name.endswith(".pkl"):
          
     
  
