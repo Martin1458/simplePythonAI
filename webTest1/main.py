@@ -13,6 +13,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
  
+# setup models
+import os
+model_folder = os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels")
+for model_name in os.listdir(model_folder):
+     if model_name.endswith(".pkl"):
+         
+    
+ 
 @app.get("/")
 #async def root(numbers: list[int] = Query([])):
 #    total = sum(numbers)
