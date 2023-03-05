@@ -22,5 +22,7 @@ def load_model(model_file_name):
     prediction = model.predict([1, 1])
     print(prediction)
 
-load_model("NN-Sum.pkl")
-
+#load_model("NN-Sum.pkl")
+print(os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "NN-Sum.pkl")))
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "NN-Sum.pkl"), "rb") as f:
+    data = pickle.load(f)
