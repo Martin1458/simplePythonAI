@@ -14,32 +14,35 @@ models_folder = os.path.join(parent_dir, "preTrainedModels")
 #y_pred = model.predict(X_new)
 
 def load_model(model_file_name):
-    print(os.path.join(models_folder, model_file_name))
-    with open(os.path.join(models_folder, model_file_name), "rb") as f:
-        model = pickle.load(f)
-    print("Model type"+str(type(model)))
-    numbers = []
-    prediction = model.predict([1, 1])
-    print(prediction)
+	print(os.path.join(models_folder, model_file_name))
+	with open(os.path.join(models_folder, model_file_name), "rb") as f:
+		model = pickle.load(f)
+	print("Model type"+str(type(model)))
+	numbers = []
+	prediction = model.predict([1, 1])
+	print(prediction)
 
 #load_model("NN-Sum.pkl")
 print(os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "NN-Sum.pkl")))
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "NN-Sum.pkl"), "rb") as f:
-    data = pickle.load(f)
+	data = pickle.load(f)
 
 dict_of_models = {}
+list_of_models = []
 
 def load_all():
+	global dict_of_models, list_of_models
 	dict_of_models = {}
+	list_of_models = []
 	model_folder = os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels")
 	for model_name in os.listdir(model_folder):
-    	if model_name.endswith(".pkl"):
-        	with open(os.path.join(model_folder, model_name), "rb") as f:
-        		data = pickle.load(f)
-        		dict_of_models[os.path.splitext(model_name)[0]] = data
+		if model_name.endswith(".pkl"):
+			with open(os.path.join(model_folder, model_name), "rb") as f:
+				data = pickle.load(f)
+				dict_of_models[os.path.splitext(model_name)[0]] = data
 	
-    for model_name in dict_of_models:
-        list_of_models.append(model_name)
-    
+	for model_name in dict_of_models:
+		list_of_models.append(model_name)
+	
 	return list_of_models, dict_of_models
 
