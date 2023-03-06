@@ -14,11 +14,10 @@ app.add_middleware(
 )
  
 # setup models
-#import os
-#model_folder = os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels")
-#for model_name in os.listdir(model_folder):
-#     if model_name.endswith(".pkl"):
-         
+import os
+from webTest1.models import load_all
+#list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
+list_of_models, dict_of_models = load_all(r"C:\Users\marti\Desktop\PythonProjects\simplePythonAI\preTrainedModels")
     
  
 @app.get("/")
@@ -36,3 +35,7 @@ async def root(myVar: str):
     except:
         pass
     return myVar
+
+@app.get("/get_models")
+async def get_models():
+    return list_of_models

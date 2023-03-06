@@ -1,12 +1,7 @@
 import os
-import pickle
+from models import load_all
 
-dict_of_models = {}
-model_folder = os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels")
-for model_name in os.listdir(model_folder):
-     if model_name.endswith(".pkl"):
-        with open(os.path.join(model_folder, model_name), "rb") as f:
-            data = pickle.load(f)
-            dict_of_models[os.path.splitext(model_name)[0]] = data
-            
+print(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
+list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
+print(list_of_models)
 print(dict_of_models)
