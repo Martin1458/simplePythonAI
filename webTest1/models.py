@@ -26,3 +26,20 @@ def load_model(model_file_name):
 print(os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "NN-Sum.pkl")))
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "NN-Sum.pkl"), "rb") as f:
     data = pickle.load(f)
+
+dict_of_models = {}
+
+def load_all():
+	dict_of_models = {}
+	model_folder = os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels")
+	for model_name in os.listdir(model_folder):
+    	if model_name.endswith(".pkl"):
+        	with open(os.path.join(model_folder, model_name), "rb") as f:
+        		data = pickle.load(f)
+        		dict_of_models[os.path.splitext(model_name)[0]] = data
+	
+    for model_name in dict_of_models:
+        list_of_models.append(model_name)
+    
+	return list_of_models, dict_of_models
+
