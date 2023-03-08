@@ -1,7 +1,6 @@
 import pathlib
 import os
 
-
 def find_models_folder(path_to_find):
     pure_path = pathlib.Path(__file__)
     un_pure_path = pure_path.as_posix()
@@ -20,7 +19,7 @@ def find_models_folder(path_to_find):
     
 
 
-exit()
+
 from models import load_all
 
 print(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
