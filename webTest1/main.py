@@ -4,6 +4,7 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+error = False
 
 # Add CORS middleware
 app.add_middleware(
@@ -13,11 +14,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
  
-# setup models
-import os
-from webTest1.models import load_all
-#list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
-list_of_models, dict_of_models = load_all(r"C:\Users\marti\Desktop\PythonProjects\simplePythonAI\preTrainedModels")
+# find models folder
+from webTest1.markdown import find_models_folder
+models_folder = find_models_folder("preTrainedModels")
+error = True if models_folder == None else False
+
+if not error:
+    # setup models
+    import os
+    from webTest1.models import load_all
+    #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
+    list_of_models, dict_of_models = load_all(models_folder)
     
  
 @app.get("/")
