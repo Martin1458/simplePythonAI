@@ -14,22 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
  
-from webTest1.models import load_all, find_models_folder
-print("1")
-# find models folder
-print("1")
-models_folder = find_models_folder("preTrainedModels")
-print("1")
-error = True if models_folder == None else False
-print("1")
-print("2")
-if not error:
-    # setup models
-    print("2")
-    #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
-    list_of_models, dict_of_models = load_all(models_folder)
-
-print("2")
     
  
 @app.get("/")
@@ -48,6 +32,24 @@ async def root(myVar: str):
         pass
     return myVar
 
+list_of_models = None
+
 @app.get("/get_models")
 async def get_models():
     return list_of_models
+
+
+from webTest1.models import load_all, find_models_folder
+print("1")
+# find models folder
+models_folder = find_models_folder("preTrainedModels")
+print("1")
+error = True if models_folder == None else False
+print("2")
+if not error:
+    # setup models
+    print("2noError")
+    #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
+    list_of_models, dict_of_models = load_all(models_folder)
+
+print("done")
