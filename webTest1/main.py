@@ -38,6 +38,21 @@ list_of_models = None
 async def get_models():
     return list_of_models
 
+@app.get("/get_prediction")
+async def get_prediction(myModel: str, myData: str):
+    if myModel == "" or myData == "":
+        return "No"
+    try:
+        myNewData = myData.split(" ")
+        myNewData = [[ int(i) for i in myNewData]]
+        
+        print("myModel, myNewData"+ myModel, myNewData)
+        selectedModel = dict_of_models[myModel]
+        prediction = selectedModel.predict(myNewData)
+        
+        return str(prediction)
+    except Exception as e:
+        return e
 
 from webTest1.models import load_all, find_models_folder
 print("1")
@@ -51,5 +66,10 @@ if not error:
     print("2noError")
     #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
     list_of_models, dict_of_models = load_all(models_folder)
+    print(list_of_models)
+    print(dict_of_models)
+    selectedModel = dict_of_models['NN-Sum']
+    prediction = selectedModel.predict([[1,5]])
+    print(prediction)
 
 print("done")
