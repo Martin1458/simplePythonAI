@@ -1,8 +1,8 @@
 # Run using: uvicorn main:app --reload 
 # Make sure you are in the same directory as this file or youll get the Error loading ASGI app.
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-
+import os
 app = FastAPI()
 error = False
 
@@ -53,6 +53,20 @@ async def get_prediction(myModel: str, myData: str):
         return str(prediction)
     except Exception as e:
         return e
+
+
+@app.post("/upload")
+def upload(file: UploadFile = File(...)):
+    try:
+        contents = file.file.read()
+        with open(file.filename, 'wb') as f:
+            f.write(contents)
+    except Exception:
+        return {"message": "There was an error uploading the file"}
+    finally:
+        file.file.close()
+
+    return {"message": f"Successfully uploaded {file.filename}"}
 
 from webTest1.models import load_all, find_models_folder
 print("1")
