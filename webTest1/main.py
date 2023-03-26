@@ -2,7 +2,9 @@
 # Make sure you are in the same directory as this file or youll get the Error loading ASGI app.
 from fastapi import FastAPI, Query, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from webTest1.models import load_all, find_folder
 import os
+
 app = FastAPI()
 error = False
 
@@ -55,11 +57,13 @@ async def get_prediction(myModel: str, myData: str):
         return e
 
 
-@app.post("/upload")
+@app.post("/upload/")
 def upload(file: UploadFile = File(...)):
     try:
+        uploads_folder = find_folder("userUploads")
+        print("folder"+str(uploads_folder.joinpath(file.filename)))
         contents = file.file.read()
-        with open(file.filename, 'wb') as f:
+        with open(uploads_folder.joinpath(file.filename), 'wb') as f:
             f.write(contents)
     except Exception:
         return {"message": "There was an error uploading the file"}
@@ -68,22 +72,17 @@ def upload(file: UploadFile = File(...)):
 
     return {"message": f"Successfully uploaded {file.filename}"}
 
-from webTest1.models import load_all, find_models_folder
-print("1")
 # find models folder
-models_folder = find_models_folder("preTrainedModels")
-print("1")
+models_folder = find_folder("preTrainedModels")
 error = True if models_folder == None else False
-print("2")
 if not error:
     # setup models
-    print("2noError")
     #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
     list_of_models, dict_of_models = load_all(models_folder)
-    print(list_of_models)
-    print(dict_of_models)
+    print("list_of_models: " + str(list_of_models))
+    print("dict_of_models: " + str(dict_of_models))
     selectedModel = dict_of_models['NN-Sum']
     prediction = selectedModel.predict([[1,5]])
     print(prediction)
 
-print("done")
+print("Loaded")
