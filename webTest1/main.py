@@ -56,15 +56,16 @@ async def get_prediction(myModel: str, myData: str):
     except Exception as e:
         return e
 
-
+uploadedFiles = []
 @app.post("/upload/")
 def upload(file: UploadFile = File(...)):
     try:
         uploads_folder = find_folder("userUploads")
-        print("folder"+str(uploads_folder.joinpath(file.filename)))
+        print("file: "+str(uploads_folder.joinpath(file.filename)))
         contents = file.file.read()
         with open(uploads_folder.joinpath(file.filename), 'wb') as f:
             f.write(contents)
+        uploadedFiles.append(uploads_folder.joinpath(file.filename))
     except Exception:
         return {"message": "There was an error uploading the file"}
     finally:
