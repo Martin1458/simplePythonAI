@@ -91,8 +91,8 @@ async def upload(file: UploadFile = File(...)):
         return {"message": f"File already exists {file.filename}"}
 
 @app.post("/createNN")
-async def create_nn(name_model: str, num_epochs: str, num_batches: str):
-    new_model = createNN(uploadedFiles[-1], num_epochs, num_batches)
+async def create_nn(name_model: str, num_epochs: str, size_of_batch: str):
+    new_model = createNN(uploadedFiles[-1], num_epochs, size_of_batch)
 
     oneUp = pathlib.Path(os.path.dirname(os.getcwd()))
     usrModels = pathlib.Path('userCreatedModels')

@@ -3,7 +3,7 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 import csv
 
-def createNN(fileName, num_epochs, num_batches):
+def createNN(fileName, num_epochs, size_of_batch):
     with open(fileName) as f:
         wholeCSV = list(csv.reader(f, delimiter=','))
         #print(wholeCSV)
@@ -38,7 +38,7 @@ def createNN(fileName, num_epochs, num_batches):
     model.compile(optimizer="adam", loss="mean_squared_error")
 
     #Trining the model
-    model.fit(input_list, output_list, epochs=num_epochs, batch_size=num_batches)
+    model.fit(input_list, output_list, epochs=num_epochs, batch_size=size_of_batch)
     
     
     return {"done":model}
