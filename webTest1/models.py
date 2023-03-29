@@ -22,6 +22,7 @@ def load_all(model_folder):
 	list_of_models = []
 	for model_name in os.listdir(model_folder):
 		if model_name.endswith(".pkl"):
+			print(model_name)
 			with open(os.path.join(model_folder, model_name), "rb") as f:
 				data = pickle.load(f) # lol
 				dict_of_models[os.path.splitext(model_name)[0]] = data

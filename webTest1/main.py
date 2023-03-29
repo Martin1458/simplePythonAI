@@ -91,12 +91,12 @@ async def upload(file: UploadFile = File(...)):
         return {"message": f"File already exists {file.filename}"}
 
 @app.post("/createNN")
-async def create_nn(name_model: str, num_epochs: str, num_of_batches: str):
+async def create_nn(name_model: str, num_epochs: str, num_batches: str):
     new_model = createNN(uploadedFiles[-1], num_epochs, num_batches)
 
     oneUp = pathlib.Path(os.path.dirname(os.getcwd()))
     usrModels = pathlib.Path('userCreatedModels')
-    pkFile = oneUp.joinpath(preModels).joinpath(name_model+".pkl")
+    pkFile = oneUp.joinpath(usrModels ).joinpath(name_model+".pkl")
     with open(pkFile, 'wb') as f:
         pickle.dump(new_model, f)
         return "new model has been created successfully"
