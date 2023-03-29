@@ -43,11 +43,12 @@ def createNN(fileName, num_epochs, num_batches):
     
     return {"done":model}
 
-model = createNN("webTest1/test.csv", 6, 4)
+#model = createNN("webTest1/testin/testin.csv", 6, 4)
+
 
 def get_tf_predictions(model_object, what_to_predict):
     prediction = model_object.predict(what_to_predict)
     return prediction
 
-if "done" in model:
-    print(get_tf_predictions(model["done"], [[1, 4]]))
+#if "done" in model:
+    #print(get_tf_predictions(model["done"], [[1, 4]]))

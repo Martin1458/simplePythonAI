@@ -4,6 +4,9 @@ from fastapi import FastAPI, Query, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from webTest1.models import load_all, find_folder
 import os
+from webTest1.creatorNN import createNN, get_tf_predictions
+import pickle
+import pathlib
 
 app = FastAPI()
 error = False
@@ -38,7 +41,13 @@ list_of_models = None
 
 @app.get("/get_models")
 async def get_models():
+    find_models()
     return list_of_models
+
+@app.get("/get_user_models")
+async def get_user_models():
+    find_user_models()
+    return user_list_of_models
 
 @app.get("/get_prediction")
 async def get_prediction(myModel: str, myData: str):
@@ -58,7 +67,8 @@ async def get_prediction(myModel: str, myData: str):
 
 uploadedFiles = []
 @app.post("/upload/")
-def upload(file: UploadFile = File(...)):
+async def upload(file: UploadFile = File(...)):
+    global uploadedFiles
     if not os.path.isfile(file):
         try:
             uploads_folder = find_folder("userUploads")
@@ -76,17 +86,43 @@ def upload(file: UploadFile = File(...)):
         return {"message": f"Successfully uploaded {file.filename}"}
     else:
         return {"message": f"File already exists {file.filename}"}
-# find models folder
-models_folder = find_folder("preTrainedModels")
-error = True if models_folder == None else False
-if not error:
-    # setup models
-    #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
-    list_of_models, dict_of_models = load_all(models_folder)
-    print("list_of_models: " + str(list_of_models))
-    print("dict_of_models: " + str(dict_of_models))
-    selectedModel = dict_of_models['NN-Sum']
-    prediction = selectedModel.predict([[1,5]])
-    print(prediction)
 
-print("Loaded")
+@app.post("/createNN")
+async def create_nn(name_model: str, num_epochs: str, num_of_batches: str):
+    new_model = createNN(uploadedFiles[-1], num_epochs, num_batches)
+
+    oneUp = pathlib.Path(os.path.dirname(os.getcwd()))
+    usrModels = pathlib.Path('userCreatedModels')
+    pkFile = oneUp.joinpath(preModels).joinpath(name_model+".pkl")
+    with open(pkFile, 'wb') as f:
+        pickle.dump(new_model, f)
+        return "new model has been created successfully"
+    pass
+
+def find_models():
+    global list_of_models, dict_of_models
+    # find models folder
+    models_folder = find_folder("preTrainedModels")
+    error = True if models_folder == None else False
+    if not error:
+        # setup models
+        #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
+        list_of_models, dict_of_models = load_all(models_folder)
+        print("list_of_models: " + str(list_of_models))
+        print("dict_of_models: " + str(dict_of_models))
+
+def find_user_models():
+    global user_list_of_models, user_dict_of_models
+    # find models folder
+    user_models_folder = find_folder("userCreatedModels")
+    error = True if user_models_folder == None else False
+    if not error:
+        # setup models
+        #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
+        user_list_of_models, user_dict_of_models = load_all(user_models_folder)
+        print("user_list_of_models: " + str(user_list_of_models))
+        print("user_dict_of_models: " + str(user_dict_of_models))
+
+
+
+    print("Loaded")
