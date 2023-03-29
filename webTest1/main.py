@@ -52,13 +52,16 @@ async def get_user_models():
 @app.get("/get_prediction")
 async def get_prediction(myModel: str, myData: str):
     if myModel == "" or myData == "":
+        print(myModel)
+        print(myData)
         return "No"
     try:
         myNewData = myData.split(" ")
         myNewData = [[ int(i) for i in myNewData]]
         
         print("myModel, myNewData"+ myModel, myNewData)
-        selectedModel = dict_of_models[myModel]
+        dict_of_all_models = dict_of_models | user_dict_of_models
+        selectedModel = dict_of_all_models[myModel]
         prediction = selectedModel.predict(myNewData)
         
         return str(prediction)
