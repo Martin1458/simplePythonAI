@@ -16,8 +16,7 @@ def find_folder(path_to_find):
                     return i.joinpath(dirs.name)
     return None
 
-def load_all(model_folder):
-	global dict_of_models, list_of_models
+def load_all_models(model_folder):
 	dict_of_models = {}
 	list_of_models = []
 	for model_name in os.listdir(model_folder):

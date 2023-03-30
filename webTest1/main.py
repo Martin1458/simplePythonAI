@@ -2,11 +2,12 @@
 # Make sure you are in the same directory as this file or youll get the Error loading ASGI app.
 from fastapi import FastAPI, Query, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from webTest1.models import load_all, find_folder
+from webTest1.models import load_all_models, find_folder
 import os
 from webTest1.creatorNN import createNN, get_tf_predictions
 import pickle
 import pathlib
+from webTest1.funFile import get_list_of_files
 
 app = FastAPI()
 error = False
@@ -41,13 +42,16 @@ list_of_models = None
 
 @app.get("/get_models")
 async def get_models():
-    find_models()
-    return list_of_models
+    return find_models(find_folder("preTrainedModels"))[0]
+
 
 @app.get("/get_user_models")
 async def get_user_models():
-    find_user_models()
-    return user_list_of_models
+    return find_models(find_folder("preTrainedModels"))[0]
+    
+@app.get("/get_user_files")
+async def get_user_files():
+    return get_list_of_files(find_folder("userUploads"))
 
 @app.get("/get_prediction")
 async def get_prediction(myModel: str, myData: str):
@@ -102,17 +106,13 @@ async def create_nn(name_model: str, num_epochs: str, size_of_batch: str):
         return "new model has been created successfully"
     pass
 
-def find_models():
-    global list_of_models, dict_of_models
-    # find models folder
-    models_folder = find_folder("preTrainedModels")
+def find_models(models_folder):
     error = True if models_folder == None else False
     if not error:
-        # setup models
-        #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
-        list_of_models, dict_of_models = load_all(models_folder)
+        list_of_models, dict_of_models = load_all_models(models_folder)
         print("list_of_models: " + str(list_of_models))
         print("dict_of_models: " + str(dict_of_models))
+    return list_of_models, dict_of_models
 
 def find_user_models():
     global user_list_of_models, user_dict_of_models
@@ -121,11 +121,9 @@ def find_user_models():
     error = True if user_models_folder == None else False
     if not error:
         # setup models
-        #list_of_models, dict_of_models = load_all(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
-        user_list_of_models, user_dict_of_models = load_all(user_models_folder)
+        #list_of_models, dict_of_models = load_all_models(os.path.join(os.path.dirname(os.getcwd()), r"preTrainedModels"))
+        user_list_of_models, user_dict_of_models = load_all_models(user_models_folder)
         print("user_list_of_models: " + str(user_list_of_models))
         print("user_dict_of_models: " + str(user_dict_of_models))
-
-
 
     print("Loaded")
