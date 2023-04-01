@@ -38,16 +38,23 @@ async def root(myVar: str):
         pass
     return myVar
 
-list_of_models = None
+list_of_models = []
+dict_of_models = {}
+user_list_of_models = []
+user_dict_of_models = {}
 
 @app.get("/get_models")
 async def get_models():
-    return find_models(find_folder("preTrainedModels"))[0]
+    global list_of_models, dict_of_models
+    list_of_models, dict_of_models = find_models(find_folder("preTrainedModels"))
+    return list_of_models
 
 
 @app.get("/get_user_models")
 async def get_user_models():
-    return find_models(find_folder("preTrainedModels"))[0]
+    global user_list_of_models, user_dict_of_models
+    user_list_of_models, user_dict_of_models = find_models(find_folder("userCreatedModels"))
+    return user_list_of_models
     
 @app.get("/get_user_files")
 async def get_user_files():
@@ -109,10 +116,10 @@ async def create_nn(name_model: str, num_epochs: str, size_of_batch: str):
 def find_models(models_folder):
     error = True if models_folder == None else False
     if not error:
-        list_of_models, dict_of_models = load_all_models(models_folder)
-        print("list_of_models: " + str(list_of_models))
-        print("dict_of_models: " + str(dict_of_models))
-    return list_of_models, dict_of_models
+        temp_list_of_models, temp_dict_of_models = load_all_models(models_folder)
+        print("temp_list_of_models: " + str(temp_list_of_models))
+        print("temp_dict_of_models: " + str(temp_dict_of_models))
+    return temp_list_of_models, temp_dict_of_models
 
 def find_user_models():
     global user_list_of_models, user_dict_of_models
