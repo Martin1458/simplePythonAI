@@ -11,6 +11,7 @@ learning_rate = 1e-2
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200
 n_embd =32
+dropout = 0.2
 # ------------
 
 # Read our shakespeare dataset
@@ -170,7 +171,6 @@ for iter in range(max_iters):
     loss.backward()
     optimizer.step()
 
-print("\nNew prediction from our model if the user input is a new line character:", end="")
-print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=100)[0].tolist()))
+torch.save(model.state_dict(), 'GPT_tiny_shakespeareV2.pth')
 
 
