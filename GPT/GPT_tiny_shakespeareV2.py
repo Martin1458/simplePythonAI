@@ -15,7 +15,7 @@ dropout = 0.2
 # ------------
 
 # Read our shakespeare dataset
-with open(r"GPT\datasets\tinyshakespeare.txt", "r", encoding="UTF-8") as f:
+with open(r"tinyshakespeare.txt", "r", encoding="UTF-8") as f:
     text = f.read()
 
 
