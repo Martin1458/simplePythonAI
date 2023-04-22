@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+import pdb
 
 #
 batch_size = 32
@@ -12,11 +13,11 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200
 # ------------
 
+print(device)
+
 # Read our shakespeare dataset
 with open(r"GPT/datasets/tinyshakespeare.txt", "r", encoding="UTF-8") as f:
     text = f.read()
-
-
 
 
 # Print list of all the chars and symbols, that are in the dataset
@@ -43,7 +44,7 @@ encoded_text = encoder(text)
 
 # Storing the encoded text in a torch.tensor object
 
-data = torch.tensor(encoded_text, dtype=torch.long)
+data = torch.tensor(encoded_text, dtype=torch.long, device=device)
 
 
 # Split the data into training and testing sets
@@ -54,6 +55,7 @@ test_data = data[test_size:]
 
 batch_size = 4 
 block_size = 8
+
 
 def get_batch(split):
     # generate a small batch of data of inputs x and targets y
@@ -68,9 +70,11 @@ def estimate_loss():
     out = {}
     model.eval()
     for split in ['train', 'val']:
-        losses = torch.zeros(eval_iters)
+        losses = torch.zeros(eval_iters, device=device)
         for k in range(eval_iters):
             X, Y = get_batch(split)
+            X = X.to(device)
+            Y = Y.to(device)
             logits, loss = model(X, Y)
             losses[k] = loss.item()
         out[split] = losses.mean()
@@ -86,7 +90,6 @@ class BigramLanguageModel(nn.Module):
         self.token_embedding_table = nn.Embedding(vocab_size, vocab_size)
 
     def forward(self, idx, targets=None):
-
         logits = self.token_embedding_table(idx) # (B,T,C)
 
         if targets is None:
@@ -101,6 +104,7 @@ class BigramLanguageModel(nn.Module):
 
     def generate(self, idx, max_new_tokens):
         for _ in range(max_new_tokens):
+            #pdb.set_trace()
             logits, loss = self(idx)
             logits = logits[:, -1, :] # becomes (B, C)
             probs = F.softmax(logits, dim=-1) # (B, C)
@@ -110,9 +114,11 @@ class BigramLanguageModel(nn.Module):
 
 model = BigramLanguageModel(vocab_size)
 m = model.to(device)
+xb = xb.to(device)
+yb = yb.to(device)
 logits, loss = m(xb, yb)
-print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=100)[0].tolist()), end="\n\n")
-
+print("\nNew prediction from our model if the user input is a new line character:", end="")
+print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long, device=device), max_new_tokens=100)[0].tolist()), end="\n\n")
 # Lets optimize and train the model
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
@@ -136,6 +142,6 @@ for iter in range(max_iters):
     optimizer.step()
 
 print("\nNew prediction from our model if the user input is a new line character:", end="")
-print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=100)[0].tolist()))
+print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long, device=device), max_new_tokens=100)[0].tolist()))
 
 

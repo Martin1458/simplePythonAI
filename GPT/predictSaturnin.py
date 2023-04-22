@@ -5,7 +5,7 @@ from torch.nn import functional as F
 # hyperparameters
 batch_size = 64 # how many independent sequences will we process in parallel?
 block_size = 256 # what is the maximum context length for predictions?
-max_iters = 100000
+max_iters = 10000
 eval_interval = 500
 learning_rate = 2e-4
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -16,10 +16,10 @@ n_layer = 6
 dropout = 0.2
 # ------------
 print(device)
-torch.manual_seed(1337)
+#torch.manual_seed(1337)
 
 # Read our shakespeare dataset
-with open(r"GPT/datasets/tinyshakespeare.txt", "r", encoding="UTF-8") as f:
+with open(r"GPT/datasets/saturninV2.txt", "r", encoding="UTF-8") as f:
     text = f.read()
 
 # here are all the unique characters that occur in this text
@@ -196,29 +196,7 @@ class GPTLanguageModel(nn.Module):
         return idx
 
 model = GPTLanguageModel()
+model.load_state_dict(torch.load("GPT_saturninV2New.pth", map_location=torch.device(device)))
 m = model.to(device)
-# print the number of parameters in the model
-print(sum(p.numel() for p in m.parameters())/1e6, 'M parameters')
 
-# create a PyTorch optimizer
-optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
-
-for iter in range(max_iters):
-
-    # every once in a while evaluate the loss on train and val sets
-    if iter % eval_interval == 0 or iter == max_iters - 1:
-        losses = estimate_loss()
-        print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
-
-    # sample a batch of data
-    xb, yb = get_batch('train')
-
-    # evaluate the loss
-    logits, loss = model(xb, yb)
-    optimizer.zero_grad(set_to_none=True)
-    loss.backward()
-    optimizer.step()
-
-torch.save(model.state_dict(), 'GPT_tiny_shakespeareV3Big.pth')
-print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=100)[0].tolist()))
-
+print(decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long, device=device), max_new_tokens=100000)[0].tolist()))

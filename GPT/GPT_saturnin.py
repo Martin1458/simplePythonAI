@@ -5,9 +5,9 @@ from torch.nn import functional as F
 # hyperparameters
 batch_size = 64 # how many independent sequences will we process in parallel?
 block_size = 256 # what is the maximum context length for predictions?
-max_iters = 5000
+max_iters = 70000
 eval_interval = 500
-learning_rate = 3e-4
+learning_rate = 1e-4
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200
 n_embd = 384
@@ -15,11 +15,11 @@ n_head = 6
 n_layer = 6
 dropout = 0.2
 # ------------
-
-torch.manual_seed(1337)
+print(device)
+#torch.manual_seed(1337)
 
 # Read our shakespeare dataset
-with open(r"GPT\datasets\saturninV2.txt", "r", encoding="UTF-8") as f:
+with open(r"GPT/datasets/saturninV2.txt", "r", encoding="UTF-8") as f:
     text = f.read()
 
 # here are all the unique characters that occur in this text
@@ -210,6 +210,9 @@ for iter in range(max_iters):
         losses = estimate_loss()
         print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
+    if iter % 10000 == 0 and (iter != 0 or iter != max_iters):
+        torch.save(model.state_dict(), 'GPT_saturninV2New'+str(iter)+'.pth')
+
     # sample a batch of data
     xb, yb = get_batch('train')
 
@@ -219,4 +222,4 @@ for iter in range(max_iters):
     loss.backward()
     optimizer.step()
 
-torch.save(model.state_dict(), 'GPT_saturninV2.pth')
+torch.save(model.state_dict(), 'GPT_saturninV2New.pth')

@@ -1,0 +1,22 @@
+10.813537 M parameters
+step 0: train loss 4.6716, val loss 4.6729
+step 500: train loss 2.0557, val loss 2.1953
+step 1000: train loss 1.4449, val loss 1.7653
+step 1500: train loss 1.1523, val loss 1.7277
+step 2000: train loss 0.8884, val loss 1.7944
+step 2500: train loss 0.6301, val loss 1.9673
+step 3000: train loss 0.4112, val loss 2.1982
+step 3500: train loss 0.2681, val loss 2.3822
+step 4000: train loss 0.1796, val loss 2.6088
+step 4500: train loss 0.1332, val loss 2.8048
+step 5000: train loss 0.1105, val loss 2.9647
+step 5500: train loss 0.0978, val loss 3.1040
+step 6000: train loss 0.0899, val loss 3.2337
+step 6500: train loss 0.0855, val loss 3.3269
+step 7000: train loss 0.0829, val loss 3.4150
+step 7500: train loss 0.0799, val loss 3.4782
+step 8000: train loss 0.0782, val loss 3.5199
+step 8500: train loss 0.0764, val loss 3.5919
+step 9000: train loss 0.0738, val loss 3.7036
+step 9500: train loss 0.0721, val loss 3.7373
+step 9999: train loss 0.0727, val loss 3.7855

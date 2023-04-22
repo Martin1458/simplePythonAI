@@ -1,3 +1,4 @@
 userUploads/*
 preTrainedModels/*
 userCreatedModels/*
+*.pth

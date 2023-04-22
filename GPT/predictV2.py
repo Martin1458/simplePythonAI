@@ -45,7 +45,7 @@ encoded_text = encoder(text)
 
 # Storing the encoded text in a torch.tensor object
 
-data = torch.tensor(encoded_text, dtype=torch.long, device=device)
+data = torch.tensor(encoded_text, dtype=torch.long)
 # Split the data into training and testing sets
 train_size = int(0.9*len(data))
 
@@ -144,35 +144,11 @@ class BigramLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
 
+
+
+
 model = BigramLanguageModel()
+model.load_state_dict(torch.load("GPT_tiny_shakespeareV2.pth"))
 m = model.to(device)
-logits, loss = m(xb, yb)
-print("Untrained model:")
-print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long, device=device), max_new_tokens=200)[0].tolist()), end="\n\n")
 
-# Lets optimize and train the model
-
-optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
-
-# This codeblock of training the model can be executed multiple times to train the model more
-
-for iter in range(max_iters):
-
-    # every once in a while evaluate the loss on train and val sets
-    if iter % eval_interval == 0:
-        losses = estimate_loss()
-        print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
-
-    # sample a batch of data
-    xb, yb = get_batch('train')
-
-    # evaluate the loss
-    logits, loss = model(xb, yb)
-    optimizer.zero_grad(set_to_none=True)
-    loss.backward()
-    optimizer.step()
-
-torch.save(model.state_dict(), 'GPT_tiny_shakespeareV2.pth')
-
-print("Lil trained model:")
-print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long, device=device), max_new_tokens=200)[0].tolist()), end="\n\n")
+print(decoder(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=500)[0].tolist()))
