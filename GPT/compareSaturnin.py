@@ -1,9 +1,14 @@
 import os
 import re
+from pathlib import Path
 
-direct = os.getcwd()
+scriptPath = Path(__file__).resolve()
+direct = scriptPath.parent
+
+# Define the prefixes for the .pth files
 pth_names = ["GPT_saturninV2", "GPT_saturninV2New"]
 
+# Function to get all .pth files with the specified prefixes
 def get_pth():
     someRandomAssList = []
     for fn in os.listdir(direct):
@@ -12,11 +17,12 @@ def get_pth():
     
     return someRandomAssList
 
+# Function to separate .pth files based on their prefixes
 def sepatare_pth(p):
     allListGod = []
     for item in pth_names:
         allListGod.append([])
-    """
+    
     smList = []
     for prefix in pth_names:
         sublist = []
@@ -26,13 +32,14 @@ def sepatare_pth(p):
         smList.append(sublist)
     
     return smList
-    """
+    
     """
     separated = [[pth_name for pth_name in p if pth_name.startswith(prefix) and all(pth_name)] for prefix in pth_names]
     """
     
     return separated
 
+# Function to get all .txt files with the specified prefix
 def get_txt():
     listek = []
     for filename in os.listdir(direct):
@@ -41,13 +48,14 @@ def get_txt():
     
     return listek
 
+# Function to extract step, train loss, and val loss from .txt files
 def get_steps():
     # StepTrainlossValloss
     STV = {}
     txt_list = get_txt()
 
     for txt_file in txt_list:
-        with open(txt_file, "r") as f:
+        with open(direct.joinpath(txt_file), "r") as f:
             all_lines = []
             for line in f:
                 if line.startswith("step"):
@@ -59,8 +67,11 @@ def get_steps():
     return STV
 
 
+# Get step, train loss, and val loss from .txt files
 the_dict = get_steps()
+# Get .pth files with specified prefixes
 pth_files = get_pth()
+# Separate .pth files based on their prefixes
 pth_sorted = sepatare_pth(pth_files)
 print("GPT/compareSaturnin.py:52 pth_sorted:", pth_sorted)
 
